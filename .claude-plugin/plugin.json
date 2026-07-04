@@ -1,0 +1,11 @@
+{
+  "name": "conductor",
+  "version": "1.0.0",
+  "description": "Tiered multi-agent orchestration workflow: a brain model plans, an orchestrator delegates, executor agents run in parallel tmux panes with fenced scopes — with independent verification before anything is committed.",
+  "author": {
+    "name": "XyndoX"
+  },
+  "homepage": "https://github.com/XyndoX/claude-conductor",
+  "license": "MIT",
+  "keywords": ["orchestration", "multi-agent", "workflow", "parallel", "delegation"]
+}
