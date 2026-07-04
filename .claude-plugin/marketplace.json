@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "good-bad-ugly",
+  "description": "Tiered multi-agent orchestration for Claude Code. Three gunslingers, three model tiers.",
+  "owner": {
+    "name": "XyndoX",
+    "url": "https://github.com/XyndoX"
+  },
+  "plugins": [
+    {
+      "name": "good-bad-ugly",
+      "description": "The Good plans and verifies, The Bad handles work needing taste, The Ugly does the grunt work — in parallel, with fenced scopes.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

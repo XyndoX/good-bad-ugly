@@ -32,9 +32,16 @@ CI and carry zero design risk. Do trivial items (file deletions, one-liners)
 inline; only real work becomes an agent task.
 
 ### 2. Fan out with fenced scopes
-Spawn independent agents **in one message** so they run concurrently
-(in Claude Code they appear as live tmux panes you can watch). Every agent
-prompt must contain:
+Spawn independent agents **in one message** so they run concurrently. Two modes:
+
+- **In-session sub-agents** (default) — headless, zero setup, they report back.
+- **tmux situation room** — one pane per executor, each a separate `claude`
+  process, with the model tier bound per pane: `claude --model opus …` for
+  The Bad, `claude --model sonnet …` for The Ugly. Use when you want to watch
+  the executors work live or pin distinct tiers. Recipe + prompt template:
+  `docs/orchestration.md`.
+
+Every agent prompt must contain:
 
 - **Repo path + environment gotchas** (quote paths with spaces, etc.)
 - **The task with the *why*** — one paragraph of context beats none
