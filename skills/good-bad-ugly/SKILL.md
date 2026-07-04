@@ -35,6 +35,10 @@ inline; only real work becomes an agent task.
 Spawn independent agents **in one message** so they run concurrently. Two modes:
 
 - **In-session sub-agents** (default) — headless, zero setup, they report back.
+  This plugin ships the executors as typed agents with the tier pre-bound:
+  spawn `the-bad` (strong model) for judgment work and `the-ugly` (fast model)
+  for mechanical work — tier matching enforced by the agent definition, not by
+  remembering a flag.
 - **tmux situation room** — one pane per executor, each a separate `claude`
   process, with the model tier bound per pane: `claude --model opus …` for
   The Bad, `claude --model sonnet …` for The Ugly. Use when you want to watch
@@ -63,10 +67,28 @@ overlaps, sequence it or fence one side out.
   yourself rather than blocking.
 - An agent reports a failure "someone else caused" → **check whether it was
   you.** (Concurrent edits by the orchestrator are the usual suspect.)
+- **Messages cross.** Async agents compose replies before reading your latest
+  directive. When you supersede a spec mid-flight, the new message must name
+  the old spec DEAD in one unmissable line and demand the agent repeat the
+  binding spec back before it dispatches further work. Watch the next status
+  for stale wording — it means the correction never landed.
 
 ### 4. Verify independently, then commit
 An agent's "all green" is a claim, not a fact. Before committing its work,
-re-run the full verification yourself (typecheck + full test suite minimum).
+re-run the full verification yourself (typecheck + full test suite minimum,
+plus the project's **domain gates** — benchmarks, golden hashes, visual
+checks — not just the generic suite; an executor's green tests can coexist
+with a wrecked benchmark). Two verification traps that pass silently:
+
+- **Verify the path you're shipping.** Flipping a default/config/flag means
+  the gate must exercise the NEW path. A benchmark that still runs the old
+  path is vacuously green. (Real case: a default-ON flip whose bench had only
+  ever measured the OFF path — the ON path hid a 74× force regression.)
+- **Read the artifact.** When the deliverable is a generated artifact (PDF,
+  image, bundle, export), open and inspect the artifact itself — and check
+  its SIZE. (Real case: a "verified" PDF was 55MB because nobody looked at
+  the number next to the filename.)
+
 Commit each agent's work as its own commit with a message that says what
 changed *and why*. Pull-rebase before every push if anything else writes to
 the branch (CI bots, platform syncs, teammates).
@@ -92,6 +114,30 @@ For feature work (not cleanups), insert a design gate before any code:
    "Interfaces: consumes/produces" blocks so tasks compose.
 4. **Execute** the plan inline or via agents, one commit per task, tests first
    where logic warrants it.
+
+## Data & spend safety (iron rules for every brief)
+
+Two rules that must appear in any brief whose work touches live-ish systems.
+Both were learned the expensive way:
+
+- **Executors never mutate real data.** Reproducing a bug or verifying a fix
+  against user-owned rows/files/sets is forbidden — the executor CREATES a
+  disposable fixture (clone a record under a throwaway name, seed a test
+  entity), operates on that, and deletes it after. A brief that says
+  "reproduce first" without naming a disposable fixture is a loaded gun.
+  (Real case: a diagnosis phase re-ran a destructive operation across 12 of
+  the user's real records; the overwrites were irreversible.)
+- **Every external call is PAID until proven free.** Provider selection often
+  hides in env vars — the "mock" provider you assume is active may be the
+  real, billed API. Verify which provider the environment resolves before any
+  agent triggers generation/inference/sending. (Real case: "free mock" QA
+  burned real API credits because a key in .env.local silently selected the
+  paid provider.)
+
+Corollary: a **destructive user-facing operation** (overwrite-in-place,
+regenerate, migrate) should get its undo/backup designed BEFORE agents are
+allowed to exercise it. If one click can destroy state, an agent will
+eventually click it.
 
 ## External-system discipline
 
@@ -121,6 +167,18 @@ a third-party API):
   search for the bare package name before declaring a dependency dead.
 - Committing an agent's work before your own verification run.
 - Sleeping on stale roadmaps: check items off the moment they ship.
+- Unanchored patterns in ignore files (`.vercelignore`, `.dockerignore`)
+  matching nested dirs — a bare `supabase` also excludes `lib/supabase/` and
+  breaks the build. Anchor to root (`/supabase`).
+- Retrying a stuck upload/deploy without killing the previous attempt —
+  orphaned processes compete for bandwidth and every retry gets slower.
+  `pkill` first, then retry once, clean.
+- Test timeouts tuned on your machine flaking on CI's 2-core runners — a
+  timeout is a hang guard, not a perf gate; size it generously (30s local
+  work can take 35s+ on CI).
+- Users watch the hot-reloading dev server while executors edit — mid-flight
+  WIP looks like shipped garbage. Warn the user, or fix the visible page
+  first.
 
 ## Intensity
 

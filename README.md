@@ -162,13 +162,18 @@ Then just ask Claude to "orchestrate" / "conduct" a big multi-part task, or:
 | `/gbu <task>` | Run the full orchestration loop on a large, multi-part task. |
 | `/gbu-audit` | The scope-and-rank phase only — a ranked findings list, no delegation, no edits. |
 | `/gbu-status` | Herd the running agents: who's idle, who owes a report, whose work is unverified, who's colliding. |
+| `/gbu-retro` | Post-session retrospective — harvest the session's scars into durable doctrine (a rule, a pitfall, a fence) instead of a summary nobody rereads. |
 
 ## What's inside
 
 - **`skills/good-bad-ugly/SKILL.md`** — the workflow The Good runs: the tier
   ladder, the fan-out loop, agent herding, external-system discipline, the
   spec→plan→execute gate, and a field-tested pitfall list.
-- **`commands/`** — the three slash commands above.
+- **`commands/`** — the four slash commands above.
+- **`agents/`** — `the-bad` (strong model) and `the-ugly` (fast model) as
+  typed, spawnable executors with the tier pre-bound and the iron rules
+  (fences, disposable fixtures, paid-API caution, honest reports) baked into
+  their definitions — tier matching enforced by structure, not memory.
 - **`docs/orchestration.md`** — the operational playbook: the fenced-prompt
   template, the tmux recipes, the verification protocol.
 - **`AGENTS.md`** — the condensed workflow for non-Claude harnesses.

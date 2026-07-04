@@ -1,11 +1,17 @@
 {
   "name": "good-bad-ugly",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The Good, the Bad and the Ugly — tiered multi-agent orchestration for Claude Code. The Good (brain) plans and verifies, the Bad (judgment executor) handles work needing taste, the Ugly (mechanical executor) does the grunt work — in parallel tmux panes with fenced scopes.",
   "author": {
     "name": "XyndoX"
   },
   "homepage": "https://github.com/XyndoX/good-bad-ugly",
   "license": "MIT",
-  "keywords": ["orchestration", "multi-agent", "workflow", "parallel", "delegation"]
+  "keywords": [
+    "orchestration",
+    "multi-agent",
+    "workflow",
+    "parallel",
+    "delegation"
+  ]
 }
