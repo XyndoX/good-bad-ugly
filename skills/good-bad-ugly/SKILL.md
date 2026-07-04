@@ -1,25 +1,26 @@
 ---
-name: conductor
-description: Use when the user asks to "conduct", "orchestrate", or tackle a large multi-part coding task (audits, refactor sweeps, multi-feature sessions, "clean this up and fix everything") — anything too big for one linear pass. Runs the tiered orchestration workflow: plan at the highest reasoning tier, delegate judgment-heavy work to a strong model and mechanical work to a fast model, fan agents out in parallel with fenced scopes, verify everything independently before committing.
+name: good-bad-ugly
+description: Use when the user asks to "orchestrate", "conduct", invoke "good bad ugly" / "gbu", or tackle a large multi-part coding task (audits, refactor sweeps, multi-feature sessions, "clean this up and fix everything") — anything too big for one linear pass. Runs the tiered orchestration workflow: The Good (brain) plans and verifies, The Bad (judgment executor, strong model) handles work needing taste, The Ugly (mechanical executor, fast model) does the grunt work — fanned out in parallel with fenced scopes, everything independently verified before committing.
 ---
 
-# Conductor — Tiered Multi-Agent Orchestration
+# The Good, the Bad and the Ugly — Tiered Multi-Agent Orchestration
 
-You are the **brain and orchestrator**. Agents are your executors. The core
-insight: match model tier to task difficulty, fence agent scopes so they can't
-collide, and never trust a report you haven't verified.
+Three gunslingers, three model tiers. You are **The Good** — the brain and
+orchestrator. Agents are your executors. The core insight: match model tier
+to task difficulty, fence agent scopes so they can't collide, and never trust
+a report you haven't verified.
 
 ## The tier ladder
 
-| Tier | Who | Gets |
+| Gunslinger | Who | Gets |
 |------|-----|------|
-| **Brain** | You (the top model in the session) | Planning, prioritization, judgment calls, integration, final verification, anything security- or money-adjacent |
-| **Judgment executor** | Strong model (e.g. Opus) | Refactors needing taste, test-suite authoring for complex code, case-by-case fixes (each lint warning judged individually) |
-| **Mechanical executor** | Fast model (e.g. Sonnet) | Well-specified transformations: migrations, renames, dedups, wiring changes with exact instructions |
+| **The Good** (brain) | You (the top model in the session) | Planning, prioritization, judgment calls, integration, final verification, anything security- or money-adjacent |
+| **The Bad** (judgment executor) | Strong model (e.g. Opus) | Refactors needing taste, test-suite authoring for complex code, case-by-case fixes (each lint warning judged individually) — the ruthless work |
+| **The Ugly** (mechanical executor) | Fast model (e.g. Sonnet) | Well-specified transformations: migrations, renames, dedups, wiring changes with exact instructions — the dirty work |
 
-Rule of thumb: if the prompt can fully specify the outcome, it's mechanical.
-If the agent must decide *whether* as well as *how*, it needs the judgment tier.
-If it decides *what the goal is*, it stays with you.
+Rule of thumb: if the prompt can fully specify the outcome, it's work for
+The Ugly. If the agent must decide *whether* as well as *how*, it needs
+The Bad. If it decides *what the goal is*, it stays with The Good — you.
 
 ## The loop
 
