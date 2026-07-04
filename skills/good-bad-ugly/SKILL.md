@@ -121,12 +121,12 @@ Two rules that must appear in any brief whose work touches live-ish systems.
 Both were learned the expensive way:
 
 - **Executors never mutate real data.** Reproducing a bug or verifying a fix
-  against user-owned rows/files/sets is forbidden — the executor CREATES a
+  against real user-owned rows/files/sets is forbidden — the executor CREATES a
   disposable fixture (clone a record under a throwaway name, seed a test
   entity), operates on that, and deletes it after. A brief that says
   "reproduce first" without naming a disposable fixture is a loaded gun.
-  (Real case: a diagnosis phase re-ran a destructive operation across 12 of
-  the user's real records; the overwrites were irreversible.)
+  (Real case: a diagnosis phase re-ran a destructive operation across 12 real
+  production records; the overwrites were irreversible.)
 - **Every external call is PAID until proven free.** Provider selection often
   hides in env vars — the "mock" provider you assume is active may be the
   real, billed API. Verify which provider the environment resolves before any
