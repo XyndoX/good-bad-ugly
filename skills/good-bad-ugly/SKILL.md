@@ -179,6 +179,17 @@ a third-party API):
 - Users watch the hot-reloading dev server while executors edit — mid-flight
   WIP looks like shipped garbage. Warn the user, or fix the visible page
   first.
+- Wiring a credential into automation without testing it in its exact
+  consumer — a token that authenticates raw API calls can still be rejected
+  by a CLI's `--token`. If you flag a risk in your own work, that's a test
+  you owe immediately, not a disclaimer.
+- Secret-setting commands that normally prompt (`gh secret set`) go
+  silent-EMPTY under a non-interactive shell and exit 0. Verify a secret took
+  effect by exercising it, never by exit code.
+- Fixing from an unverified hypothesis. Instrument first: tally the actual
+  failure classes before touching code. (Real case: a root-cause hypothesis
+  that survived code review died on the first empirical tally — the true
+  cause was elsewhere.)
 
 ## Intensity
 
