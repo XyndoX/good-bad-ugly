@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="good-bad-ugly logo">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a1d12"/>
+      <stop offset="1" stop-color="#0d0a07"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f6c359" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#e08a2e" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#e08a2e" stop-opacity="0"/>
+    </radialGradient>
+    <!-- gunslinger silhouette, feet at origin (0,0), body extends upward -->
+    <g id="slinger">
+      <rect x="-40" y="-150" width="34" height="150" rx="6"/>
+      <rect x="6"   y="-150" width="34" height="150" rx="6"/>
+      <ellipse cx="-23" cy="-4" rx="26" ry="12"/>
+      <ellipse cx="23"  cy="-4" rx="26" ry="12"/>
+      <polygon points="-56,-150 56,-150 42,-236 -42,-236"/>
+      <rect x="-14" y="-258" width="28" height="24" rx="6"/>
+      <ellipse cx="0" cy="-258" rx="55" ry="12"/>
+      <rect x="-27" y="-292" width="54" height="36" rx="10"/>
+    </g>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#sky)"/>
+  <circle cx="256" cy="250" r="205" fill="url(#sunGlow)"/>
+  <circle cx="256" cy="250" r="96" fill="#f2b43f"/>
+
+  <!-- ground shadow -->
+  <ellipse cx="256" cy="470" rx="200" ry="20" fill="#000" opacity="0.35"/>
+
+  <!-- The Ugly (right, shortest, dusty amber) -->
+  <use href="#slinger" transform="translate(366,470) scale(0.78)" fill="#b06a3a"/>
+  <!-- The Bad (center, steel) -->
+  <use href="#slinger" transform="translate(256,472) scale(0.9)" fill="#7c8b9a"/>
+  <!-- The Good (left, tallest, gold) -->
+  <use href="#slinger" transform="translate(150,470) scale(1)" fill="#e0a93b"/>
+</svg>

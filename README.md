@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" width="160" alt="good-bad-ugly logo">
+</p>
+
 # 🤠 good-bad-ugly
 
 A [Claude Code](https://claude.com/claude-code) plugin that turns Claude into a
