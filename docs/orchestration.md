@@ -5,7 +5,7 @@ map, this is the manual for actually running a session.
 
 - [Choosing the tier](#choosing-the-tier)
 - [The fenced prompt](#the-fenced-prompt)
-- [tmux recipes](#tmux-recipes)
+- [herdr recipes](#herdr-recipes)
 - [The verification protocol](#the-verification-protocol)
 - [Big features: spec → plan → execute](#big-features-spec--plan--execute)
 - [External-system discipline](#external-system-discipline)
@@ -40,7 +40,7 @@ strong model burns time and tokens on a mechanical rename. Match the tier.
 
 ## The fenced prompt
 
-Every task you hand an executor — sub-agent or tmux pane — carries **five**
+Every task you hand an executor — sub-agent or herdr pane — carries **five**
 things. Drop any of them and you get drift, collisions, or a confident "done"
 that isn't.
 
@@ -73,25 +73,25 @@ same file.** If work overlaps, either sequence it (one after the other) or fence
 one side out and give that slice to a single owner. Name the owner in the prompt
 so the agent knows a locked file isn't a bug — it's someone else's gun.
 
-## tmux recipes
+## herdr recipes
 
 The situation room: one pane per gunslinger, the model tier bound per pane with
-`claude --model`.
+`claude --model`. You're already inside a herdr session (The Good is your live
+pane), so you spawn the executors as named agents split off it — no separate
+`attach` step, they appear right in your UI.
 
 ### Deal a three-pane showdown
 
 ```bash
-# The Good (you) writes each brief into .gbu/ first, then:
-tmux new-session -d -s gbu -n showdown
-tmux split-window -h  -t gbu:showdown            # right        → The Bad
-tmux split-window -v  -t gbu:showdown.1           # bottom-right → The Ugly
-tmux select-layout -t gbu:showdown tiled
-
-tmux send-keys -t gbu:showdown.1 'claude --model opus   "$(cat .gbu/bad.md)"'  Enter
-tmux send-keys -t gbu:showdown.2 'claude --model sonnet "$(cat .gbu/ugly.md)"' Enter
-
-tmux attach -t gbu:showdown
+# The Good (you) writes each brief into .gbu/ first, then deal the executors as
+# named agents. --split places each new pane; --model binds its tier.
+herdr agent start bad  --split right -- claude --model opus   "$(cat .gbu/bad.md)"   # right → The Bad
+herdr agent start ugly --split down  -- claude --model sonnet "$(cat .gbu/ugly.md)"  # below → The Ugly
 ```
+
+Target agents by the name you gave them (`bad`, `ugly`) — no pane-index
+bookkeeping. `herdr agent focus bad` jumps to one; `herdr agent send bad "…"`
+interjects.
 
 ### Interactive vs. headless
 
@@ -105,9 +105,13 @@ tmux attach -t gbu:showdown
 ### Watch, then collect
 
 ```bash
-tmux capture-pane -t gbu:showdown.2 -p        # snapshot a pane's output
-tmux kill-session -t gbu                       # strike the set when done
+herdr agent read ugly --source recent --lines 40   # snapshot an executor's output
+herdr agent wait ugly --status idle                # block until the Ugly holsters
+herdr session stop default                          # strike the set when done
 ```
+
+`agent wait --status idle` is the herdr advantage over tmux: block until an
+executor actually finishes instead of polling `capture-pane` on a timer.
 
 When every pane reports done, control returns to The Good: you re-verify each
 executor's work (next section) and commit it yourself, one commit per gun.

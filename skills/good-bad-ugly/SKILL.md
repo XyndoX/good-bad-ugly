@@ -39,7 +39,7 @@ Spawn independent agents **in one message** so they run concurrently. Two modes:
   spawn `the-bad` (strong model) for judgment work and `the-ugly` (fast model)
   for mechanical work — tier matching enforced by the agent definition, not by
   remembering a flag.
-- **tmux situation room** — one pane per executor, each a separate `claude`
+- **herdr situation room** — one pane per executor, each a separate `claude`
   process, with the model tier bound per pane: `claude --model opus …` for
   The Bad, `claude --model sonnet …` for The Ugly. Use when you want to watch
   the executors work live or pin distinct tiers. Recipe + prompt template:

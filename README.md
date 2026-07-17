@@ -39,7 +39,7 @@ right tier, at the same time, with independent verification before every commit.
               ▼                           ▼
    ┌────────────────────┐      ┌────────────────────┐
    │  THE BAD           │      │  THE UGLY          │   each runs in its own
-   │  strong model      │      │  fast model        │   tmux pane — a live
+   │  strong model      │      │  fast model        │   herdr pane — a live
    │  work needing      │      │  well-specified    │   gun you watch fire
    │  taste & judgment  │      │  grunt work        │
    └────────────────────┘      └────────────────────┘
@@ -98,37 +98,36 @@ The full field guide — the prompt template, the verification protocol, the
 spec→plan→execute gate for features, and the pitfalls list — lives in
 [docs/orchestration.md](docs/orchestration.md).
 
-## tmux: the situation room
+## herdr: the situation room
 
-There are two ways to fan out, and the tmux one is what makes this a *framework*
+There are two ways to fan out, and the herdr one is what makes this a *framework*
 you can watch instead of a black box.
 
 **In-session sub-agents.** Ask The Good to orchestrate and it spawns headless
 sub-agents that run concurrently and report back. Zero setup, right for most
 tasks. You see summaries, not keystrokes.
 
-**The tmux situation room.** When you want to *watch* the executors work — and,
+**The herdr situation room.** When you want to *watch* the executors work — and,
 critically, pin a different model tier to each — give every gunslinger its own
-pane running a separate Claude process. The tier binding is one flag:
-`claude --model`.
+pane running a separate Claude process. herdr is an agent multiplexer built for
+exactly this: named agents, per-pane state, `agent wait` on completion. The tier
+binding is one flag: `claude --model`.
 
 ```bash
-# The Good stays in your main session and writes each executor a fenced brief
-# (see docs/orchestration.md) into .gbu/. Then deal the panes:
+# The Good stays in your live herdr pane and writes each executor a fenced brief
+# (see docs/orchestration.md) into .gbu/. Then deal the panes — each spawns as a
+# named agent split off your pane, tier bound via --model, brief handed over:
 
-tmux new-session -d -s gbu -n showdown
-tmux split-window -h  -t gbu:showdown          # right pane  → The Bad
-tmux split-window -v  -t gbu:showdown.1         # bottom-right → The Ugly
+herdr agent start bad  --split right -- claude --model opus   "$(cat .gbu/bad.md)"   # right pane → The Bad
+herdr agent start ugly --split down  -- claude --model sonnet "$(cat .gbu/ugly.md)"  # below      → The Ugly
 
-# Bind the tier to the pane with --model, hand over the fenced brief, turn it loose:
-tmux send-keys -t gbu:showdown.1 'claude --model opus   "$(cat .gbu/bad.md)"'  Enter
-tmux send-keys -t gbu:showdown.2 'claude --model sonnet "$(cat .gbu/ugly.md)"' Enter
-
-tmux attach -t gbu:showdown          # watch all three guns at once
+# No attach step — they appear in your UI. Watch, then collect:
+herdr agent read ugly --source recent --lines 40   # peek at output
+herdr agent wait ugly --status idle                # block until it finishes
 ```
 
 Now the metaphor is literal: three panes, three tiers, three jobs running side
-by side. You keep the top pane (The Good) to integrate and verify; the executors
+by side. You keep your pane (The Good) to integrate and verify; the executors
 work in theirs. Use interactive `claude "…"` when you want to interject
 mid-draft, or `claude -p "…"` for fire-and-forget headless runs whose output you
 collect at the end. Either way, **the fences in each brief are what keep two
@@ -175,7 +174,7 @@ Then just ask Claude to "orchestrate" / "conduct" a big multi-part task, or:
   (fences, disposable fixtures, paid-API caution, honest reports) baked into
   their definitions — tier matching enforced by structure, not memory.
 - **`docs/orchestration.md`** — the operational playbook: the fenced-prompt
-  template, the tmux recipes, the verification protocol.
+  template, the herdr recipes, the verification protocol.
 - **`AGENTS.md`** — the condensed workflow for non-Claude harnesses.
 
 ## Pairs well with
@@ -188,8 +187,8 @@ Then just ask Claude to "orchestrate" / "conduct" a big multi-part task, or:
 
 ## FAQ
 
-**Do I have to use tmux?**
-No. In-session sub-agents need zero setup and cover most work. tmux is for when
+**Do I have to use herdr?**
+No. In-session sub-agents need zero setup and cover most work. herdr is for when
 you want to watch executors live and pin a distinct model tier to each pane.
 
 **Isn't spawning agents just overhead?**
